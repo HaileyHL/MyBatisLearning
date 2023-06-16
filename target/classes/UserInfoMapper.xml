@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- namespace 绑定mapper-->
+<mapper namespace="com.hl.mapper.UserInfoMapper">
+    <!-- resultType is simpler but less flexible.-->
+    <!-- resultType name here is a typeAlias (instead of full name), configured in mybatis-config.xml. 后面也是-->
+     <select id="selectUser0" resultType="UserInfo">
+     select * from user_info where user_id = #{id}
+     </select>
+
+    <!--
+    resultMap achieves mapping at this level.
+    Although we achieve mapping at entity level, it might go wrong.
+    resultMapping creates flexibility for naming in Entity level
+    -->
+    <!-- property为UserInfo字段，column为mySQL字段-->
+
+    <resultMap id="userInfoResult" type="com.hl.po.UserInfo">
+        <id property="userId" column="user_id"/>
+        <result property="username" column="username"/>
+        <result property="userPassword" column="user_password"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+    </resultMap>
+
+    <select id="selectUserInfoById" resultType = "UserInfo">
+        select * from user_info where user_id = #{id};  <!-- 主键-->
+    </select>
+
+    <select id = "selectAllUsers" resultType = "UserInfo">
+        select * from user_info;
+    </select>
+
+    <insert id="insertUserInfo" parameterType="UserInfo">
+    insert into user_info(username, user_password) values (#{username}, #{userPassword});
+</insert>
+
+    <insert id="updateUsernameById" parameterType="UserInfo">
+        update user_info set username = #{name1} where user_id = #{id};
+    </insert>
+
+    <insert id="deleteUserById" parameterType="UserInfo">
+        delete from user_info where user_id = #{id};
+    </insert>
+
+</mapper>
