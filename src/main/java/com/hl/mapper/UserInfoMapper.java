@@ -33,4 +33,13 @@ public interface UserInfoMapper {
      * delete user by primary key 'id'
      */
     Integer deleteUserById(Long id);
+
+    UserInfo queryUserInfoByUsernameAndPwd(@Param("username") String name, @Param("password") String password);
+
+    List<UserInfo> queryUserInfoByUsernameOrPwd(UserInfo userInfo);
+
+    List<UserInfo> queryUserInfoByParam(UserInfo userInfo);
+
+    List<UserInfo> selectUserInfoByPages(@Param("pageIndex") Integer pageIndex, @Param("pageSize") Integer pageSize);
+
 }

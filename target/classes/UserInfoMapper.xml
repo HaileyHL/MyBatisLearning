@@ -38,12 +38,48 @@
     insert into user_info(username, user_password) values (#{username}, #{userPassword});
 </insert>
 
-    <insert id="updateUsernameById" parameterType="UserInfo">
+    <update id="updateUsernameById">
         update user_info set username = #{name1} where user_id = #{id};
-    </insert>
+    </update>
 
-    <insert id="deleteUserById" parameterType="UserInfo">
+    <delete id="deleteUserById">
         delete from user_info where user_id = #{id};
-    </insert>
+    </delete>
+
+    <select id="queryUserInfoByUsernameAndPwd" resultType="UserInfo">
+        select * from user_info where username = #{username} and user_password = #{password}
+    </select>
+
+    <!-- Dynamic Sql: avoids complex operations with MySql-->
+    <select id="queryUserInfoByUsernameOrPwd" resultType="UserInfo" parameterType="UserInfo">
+        SELECT * FROM user_info
+        <where> <!-- reason for using where instead of sql WHERE here is to avoid the case where both if statements fail-->
+            <if test="username != null and username != ''">  <!-- haven't done resultMap here so uses Java objects-->
+                username = #{username}
+            </if>
+            <if test="userPassword != null and userPassword != ''">
+                AND user_password = #{userPassword}
+            </if>
+        </where>
+    </select>
+
+    <!-- Same as the above but used for method 4.1. See po/Application-->
+    <select id="queryUserInfoByParam" resultType="UserInfo" parameterType="UserInfo">
+        SELECT * FROM user_info
+        <where> <!-- reason for using where instead of sql WHERE here is to avoid the case where both if statements fail-->
+            <if test="username != null and username != ''">  <!-- haven't done resultMap here so uses Java objects-->
+                username = #{username}
+            </if>
+            <if test="userPassword != null and userPassword != ''">
+                AND user_password = #{userPassword}
+            </if>
+        </where>
+    </select>
+
+    <!-- Limiting number items displayed-->
+    <select id="selectUserInfoByPages" resultType="UserInfo">
+        SELECT * FROM user_info limit #{pageIndex} , #{pageSize}
+    </select>
+
 
 </mapper>
